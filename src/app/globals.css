@@ -1,7 +1,11 @@
 @import "tailwindcss";
 
+* {
+  box-sizing: border-box;
+}
+
 :root {
-  --background: #ffffff;
+  --background: #eefcff;
   --foreground: #171717;
 }
 
@@ -18,9 +22,20 @@
     --foreground: #ededed;
   }
 }
-
+html {
+  font-size: 16px;
+}
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  height: 100vh;
+}
+
+html,
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
