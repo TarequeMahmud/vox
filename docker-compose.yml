@@ -1,0 +1,3 @@
+services:
+  vox:
+    image: custom-next-app:latest
