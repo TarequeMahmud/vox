@@ -1,14 +1,7 @@
 "use client";
 import Image from "next/image";
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const genAI = new GoogleGenerativeAI("AIzaSyAARF5-H4o41TalLRZ-PFIpodXsP3A3CeI");
-const prompt = "Explain how AI works";
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-const fetchData = async () => {
-  const result = await model.generateContent(prompt);
-  console.log(result.response.text());
-};
+const fetchData = async () => {};
 
 export default function NewChatButton() {
   return (
