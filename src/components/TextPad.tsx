@@ -2,19 +2,21 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import askGemini from "@/api/askGemini";
+import { useChat } from "@/contexts/ChatContext";
+import { redirect } from "next/navigation";
 
 const TextPad = () => {
-  const [message, setMessage] = useState("");
+  const { addMessage } = useChat();
+  const [input, setInput] = useState("");
   const [responses, setResponses] = useState("");
 
   const send = async () => {
-    if (!message.trim()) return;
-    console.log(message);
-    const res = await askGemini(message);
-
-    console.log(res);
-
-    setMessage("");
+    if (!input.trim()) return;
+    addMessage({ role: "user", content: input });
+    setInput("");
+    const res = await askGemini(input);
+    addMessage({ role: "ai", content: res });
+    redirect("/chat/2");
   };
 
   return (
@@ -22,8 +24,8 @@ const TextPad = () => {
       <textarea
         className="bg-white border-3 border-[#cacaca] w-full h-full rounded-3xl resize-none p-4 pr-12"
         placeholder="Ask me anything..."
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
       ></textarea>
 
       <button
