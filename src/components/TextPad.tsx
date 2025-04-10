@@ -1,21 +1,27 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import askGemini from "@/api/askGemini";
 import { useChat } from "@/contexts/ChatContext";
 import { redirect } from "next/navigation";
+import { askGeminiStream } from "@/lib/stream/askGeminiStream";
 
 const TextPad = () => {
-  const { addMessage } = useChat();
+  const { addMessage, streamAiResponse } = useChat();
   const [input, setInput] = useState("");
-  const [responses, setResponses] = useState("");
 
   const send = async () => {
     if (!input.trim()) return;
     addMessage({ role: "user", content: input });
     setInput("");
-    const res = await askGemini(input);
-    addMessage({ role: "ai", content: res });
+    const aiResponse: ChatMessage = { role: "ai", content: "" };
+    addMessage(aiResponse);
+    await askGeminiStream(input, (chunk) => {
+      streamAiResponse((prevMessage) => ({
+        ...prevMessage,
+        content: prevMessage.content + chunk,
+      }));
+    });
+
     redirect("/chat/2");
   };
 

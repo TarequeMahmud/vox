@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Image from "next/image";
 import { MdSearch } from "react-icons/md";
 import { PiSidebarFill } from "react-icons/pi";
 import NewChatButton from "@/components/NewChatButton";
