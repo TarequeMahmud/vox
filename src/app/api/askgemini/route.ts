@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
+console.log(1);
 
 const ai = new GoogleGenAI({
   apiKey: " AIzaSyAwO-ZyN4OAtDXlJgKS62fjsgIvUiz44VY",
@@ -7,6 +8,7 @@ const ai = new GoogleGenAI({
 
 export async function POST(req: Request): Promise<NextResponse> {
   const { message } = await req.json();
+
   const response = await ai.models.generateContentStream({
     model: "gemini-2.0-flash",
     contents: `${message}`,
