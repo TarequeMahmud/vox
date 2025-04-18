@@ -1,22 +1,26 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "../globals.css";
 import { MdSearch } from "react-icons/md";
 import { PiSidebarFill } from "react-icons/pi";
 import NewChatButton from "@/components/NewChatButton";
 import TextPad from "@/components/TextPad";
 import Logo from "@/components/Logo";
 import { ChatProvider } from "@/contexts/ChatContext";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Vox- Home page",
   description: "Vox home page",
 };
 
+const authenticated = false;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  if (!authenticated) redirect("/auth/login");
   return (
     <html lang="en">
       <ChatProvider>
