@@ -22,7 +22,12 @@ export default function Login() {
     axios
       .post("/api/auth/login", { email, password })
       .then((response) => {
+        console.log(response);
+
         console.log(response.data);
+        if (response.status === 200) {
+          window.location.href = "/";
+        }
       })
       .catch((error) => {
         console.error("There was an error!", error);

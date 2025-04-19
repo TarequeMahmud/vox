@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
   try {
@@ -14,18 +16,31 @@ export async function POST(request: Request) {
     }
 
     // Mock user authentication logic
-    const mockUser = {
-      email: "aaa@aa.a",
-      password: "aaaaaa",
-    };
+    const passwordHash = await bcrypt.hash("password123", 10);
+    const USERS = [
+      {
+        id: 1,
+        email: "user@example.com",
+        passwordHash,
+      },
+    ];
 
-    if (email === mockUser.email && password === mockUser.password) {
-      const token = "mock-jwt-token";
+    const user = USERS.find((user) => user.email === email);
+    if (user && (await bcrypt.compare(password, user.passwordHash))) {
+      const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, {
+        expiresIn: "1h",
+      });
 
-      return NextResponse.json(
-        { message: "Login successful", token },
+      const response = NextResponse.json(
+        { message: "Login successful" },
         { status: 200 }
       );
+      response.cookies.set("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
+      return response;
     } else {
       return NextResponse.json(
         { error: "Invalid email or password" },

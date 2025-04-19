@@ -1,12 +1,22 @@
 import Image from "next/image";
 import "../globals.css";
 import type { Metadata } from "next";
+import { getToken } from "@/lib/auth";
+import { redirect } from "next/navigation";
 export const metadata: Metadata = {
   title: "Vox- Authenticate",
   description: "Vox authentication page",
 };
 
-export default function Auth({ children }: { children: React.ReactNode }) {
+export default async function Auth({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const token = await getToken();
+  if (token) {
+    redirect("/");
+  }
   return (
     <html lang="en">
       <body>

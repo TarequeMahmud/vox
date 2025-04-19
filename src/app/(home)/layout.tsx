@@ -7,20 +7,23 @@ import TextPad from "@/components/TextPad";
 import Logo from "@/components/Logo";
 import { ChatProvider } from "@/contexts/ChatContext";
 import { redirect } from "next/navigation";
+import { getToken } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "Vox- Home page",
   description: "Vox home page",
 };
 
-const authenticated = false;
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  if (!authenticated) redirect("/auth/login");
+  // Check if the user is authenticated
+  const token = await getToken();
+  if (!token) {
+    redirect("/auth/login");
+  }
   return (
     <html lang="en">
       <ChatProvider>
