@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { query } from "@/lib/db";
 
 export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
-    console.log(email, password);
 
-    // Validate input
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email and password are required" },
@@ -15,21 +14,47 @@ export async function POST(request: Request) {
       );
     }
 
-    // Mock user authentication logic
-    const passwordHash = await bcrypt.hash("password123", 10);
-    const USERS = [
-      {
-        id: 1,
-        email: "user@example.com",
-        passwordHash,
-      },
-    ];
+    let user;
+    try {
+      user = await query("SELECT * FROM users WHERE email = $1", [email]);
+    } catch (dbError) {
+      console.error("Database error:", dbError);
+      return NextResponse.json(
+        { error: "Failed to query user from database" },
+        { status: 500 }
+      );
+    }
 
-    const user = USERS.find((user) => user.email === email);
-    if (user && (await bcrypt.compare(password, user.passwordHash))) {
-      const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, {
-        expiresIn: "1h",
-      });
+    if (user.rowCount === 0) {
+      console.log("Invalid email");
+      return NextResponse.json({ error: "Invalid email" }, { status: 401 });
+    }
+
+    const userData = user.rows[0];
+    let passwordMatch;
+    try {
+      passwordMatch = await bcrypt.compare(password, userData.password);
+    } catch (hashError) {
+      console.error("Password hash comparison failed:", hashError);
+      return NextResponse.json(
+        { error: "Failed to process password" },
+        { status: 500 }
+      );
+    }
+
+    if (passwordMatch) {
+      let token;
+      try {
+        token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, {
+          expiresIn: "1h",
+        });
+      } catch (jwtError) {
+        console.error("JWT generation failed:", jwtError);
+        return NextResponse.json(
+          { error: "Failed to generate token" },
+          { status: 500 }
+        );
+      }
 
       const response = NextResponse.json(
         { message: "Login successful" },
@@ -40,14 +65,15 @@ export async function POST(request: Request) {
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
       });
+
       return response;
     } else {
-      return NextResponse.json(
-        { error: "Invalid email or password" },
-        { status: 401 }
-      );
+      console.log("Invalid password");
+      return NextResponse.json({ error: "Invalid password" }, { status: 401 });
     }
   } catch (error: unknown) {
+    console.error("Unexpected server error:", error);
+
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }

@@ -4,7 +4,7 @@ const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
 });
 
-export async function query(text: string, params?: any[]) {
+export async function query(text: string, params?: unknown[]) {
   const client = await pool.connect();
   try {
     const res = await client.query(text, params);
