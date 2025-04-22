@@ -3,6 +3,9 @@ import "../globals.css";
 import type { Metadata } from "next";
 import { verifyToken } from "@/lib/auth";
 import { redirect } from "next/navigation";
+
+import ClientLayout from "@/components/ClientLayout";
+
 export const metadata: Metadata = {
   title: "Vox- Authenticate",
   description: "Vox authentication page",
@@ -30,7 +33,8 @@ export default async function Auth({
               To explore immense power of Vox, please login.
             </p>
           </div>
-          {children}
+
+          <ClientLayout>{children}</ClientLayout>
         </div>
       </body>
     </html>
