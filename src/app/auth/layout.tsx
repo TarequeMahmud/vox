@@ -23,7 +23,7 @@ export default async function Auth({
   return (
     <html lang="en">
       <body>
-        <div className="flex flex-row  h-full w-full m-0 p-0 bg-[#8becff]">
+        <div className="flex flex-row justify-center items-center  h-auto min-h-full w-full m-0 p-0 bg-[#8becff]">
           <div className="flex flex-col justify-center items-center w-[50%] h-full px-10 gap-10">
             <Image src="/logo.png" alt="Vox logo" width={100} height={100} />
             <h1 className="text-4xl font-bold text-center text-gray-800">
