@@ -57,7 +57,7 @@ export default function Register() {
       // Handle successful registration
       if (response.status === 200) {
         setRegistered("");
-        alert(response.data.message);
+        window.location.href = "/auth/login";
       }
     } catch (error) {
       // Handle errors
