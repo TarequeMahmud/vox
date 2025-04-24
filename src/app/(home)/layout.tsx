@@ -4,6 +4,7 @@ import { MdSearch } from "react-icons/md";
 import { PiSidebarFill } from "react-icons/pi";
 import NewChatButton from "@/components/NewChatButton";
 import TextPad from "@/components/TextPad";
+import { IBM_Plex_Sans } from "next/font/google";
 import Logo from "@/components/Logo";
 import { ChatProvider } from "@/contexts/ChatContext";
 import { redirect } from "next/navigation";
@@ -13,6 +14,11 @@ export const metadata: Metadata = {
   title: "Vox- Home page",
   description: "Vox home page",
 };
+
+const ibm = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
+});
 
 export default async function RootLayout({
   children,
@@ -29,7 +35,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <ChatProvider>
-        <body>
+        <body className={ibm.className}>
           <div className="flex flex-row  h-full w-full m-0 p-0">
             <div className="flex flex-col justify-start items-center  bg-[#8becff] h-full w-[350px] m-0 p-2">
               <div className="flex flex-row justify-between h-10 w-full pt-2">

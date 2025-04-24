@@ -1,21 +1,25 @@
 "use client";
+import AuthLinks from "@/components/AuthLinks";
 import axios from "axios";
+import useLoader from "@/hooks/useLoader";
+import Spinner from "@/components/Spinner";
 
 export default function Login() {
+  const { loading, showLoader, hideLoader } = useLoader();
   const handleSignin = (event: React.FormEvent<HTMLFormElement>) => {
     //prevent reload
     event.preventDefault();
-
+    //show loader
+    showLoader();
     //form inputs
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email");
     const password = formData.get("password");
 
-    console.log(email, password);
-
     // Perform validation
     if (!email || !password) {
       alert("Please fill in all fields");
+      hideLoader();
       return;
     }
 
@@ -23,6 +27,7 @@ export default function Login() {
       .post("/api/auth/login", { email, password })
       .then((response) => {
         console.log(response);
+        hideLoader();
 
         console.log(response.data);
         if (response.status === 200) {
@@ -31,13 +36,14 @@ export default function Login() {
       })
       .catch((error) => {
         console.error("There was an error!", error);
+        hideLoader();
       });
   };
   return (
     <div className="flex flex-col justify-center items-center w-[50%] h-full px-10  ">
       {/* login container */}
-      <div className="flex flex-col justify-center items-center w-[500px] h-[400px] px-10 bg-[#ffffffe1] rounded-xl border-2 border-gray-300 shadow-lg">
-        <h1 className="text-3xl font-bold mt-4">Login</h1>
+      <div className="flex flex-col justify-center items-center w-[600px] h-auto px-10 bg-[#ffffffe1] rounded-xl border-2 border-gray-300 shadow-lg pb-8 my-10">
+        <h1 className="text-3xl font-bold my-4">Login</h1>
         <form
           className="flex flex-col justify-center gap-4 items-center w-full h-full"
           onSubmit={handleSignin}
@@ -66,9 +72,10 @@ export default function Login() {
             type="submit"
             className="w-full h-[50px] bg-[#0000ff] text-white rounded-md m-2 cursor-pointer hover:bg-[#0000ffb3] transition duration-300 ease-in-out"
           >
-            Login
+            {loading ? <Spinner /> : "Login"}
           </button>
         </form>
+        <AuthLinks mode="login" />
       </div>
     </div>
   );

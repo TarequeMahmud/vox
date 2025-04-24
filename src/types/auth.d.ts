@@ -3,3 +3,7 @@ declare namespace NodeJS {
     JWT_SECRET_KEY: string;
   }
 }
+
+interface AuthLinksProps {
+  mode?: "login" | "register";
+}

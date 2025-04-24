@@ -31,6 +31,15 @@ export async function POST(request: Request) {
     }
 
     const userData = user.rows[0];
+    // Check if the user is validated
+    if (!userData.validated) {
+      console.log("User not validated");
+      return NextResponse.json(
+        { error: "User not validated" },
+        { status: 401 }
+      );
+    }
+
     let passwordMatch;
     try {
       passwordMatch = await bcrypt.compare(password, userData.password);
