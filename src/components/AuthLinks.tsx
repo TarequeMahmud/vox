@@ -21,7 +21,7 @@ const AuthLinks: React.FC<AuthLinksProps> = ({ mode }) => {
       )}
       <p className="text-lg text-center text-[#4e4e4e]">
         Forgot your password?{" "}
-        <a href="/auth/forgot" className="text-blue-500">
+        <a href="/auth/recover" className="text-blue-500">
           Reset Password
         </a>
       </p>

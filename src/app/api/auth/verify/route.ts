@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
-import redis from "@/lib/redis";
+import { verifyOTP } from "@/lib/verifyOTP";
 
 export async function POST(req: Request) {
   try {
@@ -10,19 +10,26 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
-    //retrieve the OTP from Redis
-    const otp = await redis.get(`otp:${email}`);
-    console.log(otp);
-    if (!otp) {
-      return NextResponse.json(
-        { error: "OTP not found or expired" },
-        { status: 404 }
-      );
-    }
-    //compare the OTP with the one provided by the user
-    if (otp !== verificationCode) {
-      return NextResponse.json({ error: "Invalid OTP" }, { status: 401 });
-    }
+    verifyOTP(email, verificationCode)
+      .then((result) => {
+        if (result === null) {
+          return NextResponse.json(
+            { error: "OTP not found or expired" },
+            { status: 404 }
+          );
+        }
+        if (result === "OTP_NOT_EQUAL") {
+          return NextResponse.json({ error: "Invalid OTP" }, { status: 401 });
+        }
+      })
+      .catch((error) => {
+        console.error("Error verifying OTP:", error);
+        return NextResponse.json(
+          { error: "Internal server error" },
+          { status: 500 }
+        );
+      });
+
     //if the OTP is valid, update the user's status in the database
     const user = await query(
       "UPDATE users SET validated = true WHERE email = $1 RETURNING *",
@@ -35,7 +42,7 @@ export async function POST(req: Request) {
       );
     }
     //delete the OTP from Redis
-    await redis.del(`otp:${email}`);
+
     return NextResponse.json(
       { message: "OTP validated successfully" },
       { status: 200 }
