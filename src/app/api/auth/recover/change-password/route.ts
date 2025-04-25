@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import bcrypt from "bcryptjs";
+import { recoveryToken } from "@/lib/recoveryToken";
 
 export async function POST(req: Request) {
   try {
-    const { email, newPassword } = await req.json();
+    const { email, newPassword, token } = await req.json();
 
     if (!email) {
       return NextResponse.json(
@@ -16,6 +17,15 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: "New password is required" },
         { status: 400 }
+      );
+    }
+    //verify recovery token
+    const storedToken = await recoveryToken(email, "VERIFY");
+
+    if (!storedToken || storedToken !== token) {
+      return NextResponse.json(
+        { error: "Invalid or expired token" },
+        { status: 403 }
       );
     }
     // hash the new password

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { verifyOTP } from "@/lib/verifyOTP";
+import { recoveryToken } from "@/lib/recoveryToken";
 export const POST = async (req: Request) => {
   try {
     const { email, verificationCode } = await req.json();
@@ -19,8 +20,10 @@ export const POST = async (req: Request) => {
       return NextResponse.json({ error: "Invalid OTP" }, { status: 401 });
     }
 
+    const token = await recoveryToken(email, "GENERATE");
+
     return NextResponse.json(
-      { message: "OTP validated successfully" },
+      { message: "OTP validated successfully", token },
       { status: 200 }
     );
   } catch (error: unknown) {

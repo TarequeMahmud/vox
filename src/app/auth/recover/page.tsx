@@ -7,6 +7,7 @@ import Spinner from "@/components/Spinner";
 
 export default function Recover() {
   const [email, setEmail] = useState<FormDataEntryValue>("");
+  const [recoveryToken, setRecoveryToken] = useState<string>("");
   const [status, setStatus] = useState<
     "SEARCH_EMAIL" | "VERIFY_OTP" | "CHANGE_PWD" | ""
   >("SEARCH_EMAIL");
@@ -60,6 +61,7 @@ export default function Recover() {
       // Handle successful registration
       if (response.status === 200) {
         setStatus("CHANGE_PWD");
+        setRecoveryToken(response.data.token);
         hideLoader();
       }
     } catch (error) {
@@ -86,6 +88,7 @@ export default function Recover() {
       const response = await axios.post("/api/auth/recover/change-password", {
         newPassword,
         email: email,
+        token: recoveryToken,
       });
 
       // Handle successful registration
