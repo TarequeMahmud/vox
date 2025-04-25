@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const Logo = () => {
   return (
-    <div className="flex flex-row justify-center items-center h-7 w-20 bg-[#000000c8] rounded-3xl m-0">
+    <div className="flex flex-row justify-center items-center h-7 w-20 bg-[#000000c8] rounded-3xl m-0 cursor-pointer">
       <Image
         src="/logo.png"
         alt="vox logo"

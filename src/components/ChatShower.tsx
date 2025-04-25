@@ -18,8 +18,8 @@ const ChatShower = () => {
             className={clsx(
               "h-auto min-h-10   m-4 rounded-[10px] text-start py-2 px-5 text-lg",
               {
-                "bg-[#BBF4FF] w-auto": message.role === "user",
-                "w-[90%]": message.role === "ai",
+                "bg-[#BBF4FF] w-auto max-w-[50%]": message.role === "user",
+                "w-[80%] max-w-[80%]": message.role === "ai",
               }
             )}
           >
