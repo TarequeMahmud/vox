@@ -64,7 +64,7 @@ export default function Login() {
             maxLength={20}
             autoComplete="on"
             autoCorrect="off"
-            autoCapitalize="off"
+            autoCapitalize="none"
             spellCheck="false"
             className="w-full h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
           />
