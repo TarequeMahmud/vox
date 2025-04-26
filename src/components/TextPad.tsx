@@ -2,17 +2,22 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useChat } from "@/contexts/ChatContext";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+
 import { askGeminiStream } from "@/lib/stream/askGeminiStream";
 
 const TextPad = () => {
+  const router = useRouter();
   const { addMessage, streamAiResponse } = useChat();
   const [input, setInput] = useState("");
+  const redirectTo = async (path: string): Promise<void> => router.push(path);
 
   const send = async () => {
     if (!input.trim()) return;
+
     addMessage({ role: "user", content: input });
     setInput("");
+
     const aiResponse: ChatMessage = { role: "ai", content: "" };
     addMessage(aiResponse);
     await askGeminiStream(input, (chunk) => {
@@ -21,8 +26,13 @@ const TextPad = () => {
         content: prevMessage.content + chunk,
       }));
     });
+  };
 
-    redirect("/chat/2");
+  const handleSubmit = async () => {
+    if (window.location.pathname === "/") {
+      redirectTo("/chat/2");
+    }
+    await send();
   };
 
   return (
@@ -36,7 +46,7 @@ const TextPad = () => {
 
       <button
         className="absolute bottom-3 right-3 bg-transparent p-2 cursor-pointer"
-        onClick={send}
+        onClick={handleSubmit}
       >
         <Image
           src="/send.png"
