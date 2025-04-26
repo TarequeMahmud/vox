@@ -31,12 +31,42 @@ async function seedUsers() {
   console.log("Sample user seeded.");
 }
 
+async function seedChats() {
+  console.log("Creating user table if it does not exist...");
+  await query(`
+            CREATE TABLE IF NOT EXISTS chats (
+               id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+               user_id UUID REFERENCES users(id),
+               title VARCHAR(100) NOT NULL,
+               created_at TIMESTAMP DEFAULT NOW(),
+               updated_at TIMESTAMP DEFAULT NOW()
+            );
+          `);
+}
+
+async function seedMessages() {
+  console.log("Creating messages table if it does not exist...");
+  await query(`
+            CREATE TABLE IF NOT EXISTS messages (
+               id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+               chat_id UUID REFERENCES chats(id),
+               user_id UUID REFERENCES users(id),
+               content TEXT NOT NULL,
+               role VARCHAR(10) NOT NULL CHECK (role IN ('user', 'model')),
+               created_at TIMESTAMP DEFAULT NOW(),
+               updated_at TIMESTAMP DEFAULT NOW()
+            );
+          `);
+}
+
 export async function GET() {
   // Call the seedUsers function
-  console.log("Seeding users...");
+  console.log("Seeding tables...");
 
   try {
-    await seedUsers();
+    //await seedUsers();
+    //await seedChats();
+    //await seedMessages();
     return NextResponse.json({
       message: "Seeding Complete",
     });
