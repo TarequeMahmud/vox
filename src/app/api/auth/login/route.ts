@@ -54,9 +54,13 @@ export async function POST(request: Request) {
     if (passwordMatch) {
       let token;
       try {
-        token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, {
-          expiresIn: "1h",
-        });
+        token = jwt.sign(
+          { email, id: userData.id },
+          process.env.JWT_SECRET_KEY,
+          {
+            expiresIn: "1h",
+          }
+        );
       } catch (jwtError) {
         console.error("JWT generation failed:", jwtError);
         return NextResponse.json(
