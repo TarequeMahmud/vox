@@ -3,12 +3,16 @@ import { useState } from "react";
 import Image from "next/image";
 import { useChat } from "@/contexts/ChatContext";
 import { useRouter } from "next/navigation";
-
+import axios from "axios";
+import Spinner from "@/components/Spinner";
 import { askGeminiStream } from "@/lib/stream/askGeminiStream";
+import useLoader from "@/hooks/useLoader";
 
 const TextPad = () => {
   const router = useRouter();
   const { addMessage, streamAiResponse } = useChat();
+  const { loading, showLoader, hideLoader } = useLoader();
+
   const [input, setInput] = useState("");
   const redirectTo = async (path: string): Promise<void> => router.push(path);
 
@@ -29,10 +33,20 @@ const TextPad = () => {
   };
 
   const handleSubmit = async () => {
+    showLoader();
     if (window.location.pathname === "/") {
-      redirectTo("/chat/2");
+      try {
+        const response = await axios.post("/api/chats", { chatName: input });
+        if (response.status === 201) {
+          await redirectTo(`/chat/${response.data.chat_id}`);
+        }
+      } catch (error) {
+        console.error("There was an error!", error);
+        hideLoader();
+      }
     }
     await send();
+    hideLoader();
   };
 
   return (
@@ -42,20 +56,32 @@ const TextPad = () => {
         placeholder="Ask me anything..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSubmit();
+          }
+        }}
       ></textarea>
 
       <button
-        className="absolute bottom-3 right-3 bg-transparent p-2 cursor-pointer"
+        className={`absolute bottom-3 right-3 bg-transparent p-2 ${
+          loading ? "cursor-not-allowed" : "cursor-pointer"
+        }`}
         onClick={handleSubmit}
       >
-        <Image
-          src="/send.png"
-          alt="send to vox"
-          height={24}
-          width={24}
-          className="mr-1"
-          unoptimized
-        />
+        {loading ? (
+          <Spinner color="border-gray-950" />
+        ) : (
+          <Image
+            src="/send.png"
+            alt="send to vox"
+            height={24}
+            width={24}
+            className="mr-1 "
+            unoptimized
+          />
+        )}
       </button>
     </div>
   );

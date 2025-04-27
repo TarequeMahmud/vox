@@ -35,6 +35,7 @@ export async function POST(request: Request) {
         "INSERT INTO chats(user_id, title) VALUES($1, $2) RETURNING *",
         [id, chatName]
       );
+      const chatId = insertChat.rows[0].id;
 
       if (!insertChat || insertChat.rowCount === 0) {
         return NextResponse.json(
@@ -43,7 +44,10 @@ export async function POST(request: Request) {
         );
       }
 
-      return NextResponse.json({ message: "Chat saved" }, { status: 201 });
+      return NextResponse.json(
+        { message: "Chat saved", chat_id: chatId },
+        { status: 201 }
+      );
     } catch (dbError) {
       if (dbError instanceof DatabaseError) {
         console.error("Database error:", dbError);

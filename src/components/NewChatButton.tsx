@@ -1,13 +1,12 @@
 "use client";
 import Image from "next/image";
-
-const fetchData = async () => {};
+import { redirect } from "next/navigation";
 
 export default function NewChatButton() {
   return (
     <div
       className="flex flex-row justify-start items-center gap-3 h-8 bg-[#FFFFFF] rounded-md p-1 pl-3 cursor-pointer"
-      onClick={fetchData}
+      onClick={() => redirect("/")}
     >
       <Image
         src="/new-chat.png"
