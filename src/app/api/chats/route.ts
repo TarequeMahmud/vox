@@ -3,15 +3,16 @@ import { query } from "@/lib/db";
 import { DatabaseError } from "pg";
 import { cookies } from "next/headers";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import predictTitle from "@/lib/predictTitle";
 
 export async function POST(request: Request) {
   try {
-    const { chatName } = await request.json();
+    const { firstMessage } = await request.json();
     const cookieStore = await cookies();
 
-    if (!chatName) {
+    if (!firstMessage) {
       return NextResponse.json(
-        { error: "Provide a name for chat" },
+        { error: "Where is first message from user?" },
         { status: 400 }
       );
     }
@@ -30,10 +31,19 @@ export async function POST(request: Request) {
 
     const id = payload.id;
 
+    // predict a title for the chat.
+    const title = await predictTitle(firstMessage);
+    if (!title) {
+      return NextResponse.json(
+        { error: "Failed to predict title" },
+        { status: 500 }
+      );
+    }
+
     try {
       const insertChat = await query(
         "INSERT INTO chats(user_id, title) VALUES($1, $2) RETURNING *",
-        [id, chatName]
+        [id, title]
       );
       const chatId = insertChat.rows[0].id;
 

@@ -36,7 +36,9 @@ const TextPad = () => {
     showLoader();
     if (window.location.pathname === "/") {
       try {
-        const response = await axios.post("/api/chats", { chatName: input });
+        const response = await axios.post("/api/chats", {
+          firstMessage: input,
+        });
         if (response.status === 201) {
           await redirectTo(`/chat/${response.data.chat_id}`);
         }
