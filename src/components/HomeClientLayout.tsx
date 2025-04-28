@@ -5,6 +5,7 @@ import { PiSidebarFill } from "react-icons/pi";
 import NewChatButton from "@/components/NewChatButton";
 import TextPad from "@/components/TextPad";
 import Logo from "@/components/Logo";
+import ChatlistContainer from "./ChatlistContainer";
 interface HomeClientLayoutProps {
   children: React.ReactNode;
 }
@@ -30,8 +31,10 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
               />
             </div>
           </div>
-          <div className="flex flex-col justify-between w-[95%]   mt-10">
+          <div className="flex flex-col justify-between w-[95%] overflow-y-hidden mt-10">
             <NewChatButton />
+
+            <ChatlistContainer />
           </div>
         </div>
       )}
