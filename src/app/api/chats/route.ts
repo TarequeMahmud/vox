@@ -87,3 +87,105 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export async function GET(request: Request) {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
+    if (!token) {
+      return NextResponse.json(
+        { error: "User not authenticated" },
+        { status: 401 }
+      );
+    }
+    const payload = jwt.verify(
+      token,
+      process.env.JWT_SECRET_KEY!
+    ) as JwtPayload;
+
+    const id = payload.id;
+
+    try {
+      const getChats = await query(
+        `
+          WITH grouped_chats AS (
+            SELECT *, 
+              CASE
+                WHEN created_at::date = CURRENT_DATE THEN 'Today'
+                WHEN created_at::date = CURRENT_DATE - INTERVAL '1 day' THEN 'Yesterday'
+                WHEN created_at >= CURRENT_DATE - INTERVAL '7 days' THEN 'Last 7 Days'
+                WHEN created_at >= CURRENT_DATE - INTERVAL '30 days' THEN 'Last 30 Days'
+                ELSE 'Older'
+              END AS date_group
+            FROM chats
+            WHERE user_id = $1
+          )
+          SELECT * FROM grouped_chats
+          ORDER BY 
+            CASE
+              WHEN date_group = 'Today' THEN 1
+              WHEN date_group = 'Yesterday' THEN 2
+              WHEN date_group = 'Last 7 Days' THEN 3
+              WHEN date_group = 'Last 30 Days' THEN 4
+              ELSE 5
+            END,
+            created_at DESC;
+        `,
+        [id]
+      );
+
+      if (!getChats || getChats.rowCount === 0) {
+        return NextResponse.json(
+          { error: "Failed to get chats" },
+          { status: 500 }
+        );
+      }
+      // provide a grouped response for the chats retrieved from the database.
+      const groups: GroupedChats[] = [];
+
+      for (const chat of getChats.rows as ChatRow[]) {
+        let group = groups.find((g) => g.date_group === chat.date_group);
+        if (!group) {
+          group = {
+            date_group: chat.date_group,
+            chats: [],
+          };
+          groups.push(group);
+        }
+        group.chats.push({
+          id: chat.id,
+          title: chat.title,
+          created_at: chat.created_at,
+        });
+      }
+
+      return NextResponse.json(groups, { status: 200 });
+    } catch (dbError) {
+      if (dbError instanceof DatabaseError) {
+        console.error("Database error:", dbError);
+        if (dbError.code === "ETIMEDOUT") {
+          return NextResponse.json(
+            { error: "Database connection timed out" },
+            { status: 500 }
+          );
+        }
+
+        return NextResponse.json(
+          { error: "Failed to query user from database" },
+          { status: 500 }
+        );
+      }
+    }
+  } catch (error: unknown) {
+    console.error("Unexpected server error:", error);
+
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
