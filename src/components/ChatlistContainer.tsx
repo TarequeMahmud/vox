@@ -21,7 +21,7 @@ const ChatlistContainer: React.FC = () => {
     chatListFetch();
   }, []);
   return (
-    <div className="flex flex-col justify-start items-center w-full h-[95%] my-3 overflow-scroll no-scrollbar">
+    <div className="flex flex-col justify-start items-center w-full h-[95%] my-3 overflow-y-scroll no-scrollbar">
       {!loading &&
         chatList &&
         chatList.length > 0 &&
