@@ -7,12 +7,18 @@ import predictTitle from "@/lib/predictTitle";
 
 export async function POST(request: Request) {
   try {
-    const { firstMessage } = await request.json();
+    const { firstMessage, chatId } = await request.json();
     const cookieStore = await cookies();
 
     if (!firstMessage) {
       return NextResponse.json(
         { error: "Where is first message from user?" },
+        { status: 400 }
+      );
+    }
+    if (!chatId) {
+      return NextResponse.json(
+        { error: "Where is chat id for the chat?" },
         { status: 400 }
       );
     }
@@ -29,7 +35,7 @@ export async function POST(request: Request) {
       process.env.JWT_SECRET_KEY!
     ) as JwtPayload;
 
-    const id = payload.id;
+    const user_id = payload.id;
 
     // predict a title for the chat.
     const title = await predictTitle(firstMessage);
@@ -42,8 +48,8 @@ export async function POST(request: Request) {
 
     try {
       const insertChat = await query(
-        "INSERT INTO chats(user_id, title) VALUES($1, $2) RETURNING *",
-        [id, title]
+        "INSERT INTO chats(id, user_id, title) VALUES($1, $2, $3) RETURNING *",
+        [chatId, user_id, title]
       );
       const chatRow: ChatRow = insertChat.rows[0];
       const chatResponse: SingleChat = {

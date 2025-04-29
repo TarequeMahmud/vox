@@ -34,14 +34,16 @@ const TextPad = ({ setLastChat }: Pick<LastChatProps, "setLastChat">) => {
 
   const handleSubmit = async () => {
     showLoader();
+    const uuid = crypto.randomUUID();
     if (window.location.pathname === "/") {
+      await redirectTo(`/chat/${uuid}`);
+      await send();
       try {
         const response = await axios.post("/api/chats", {
           firstMessage: input,
+          chatId: uuid,
         });
         if (response.status === 201) {
-          await redirectTo(`/chat/${response.data.chatResponse.chat.id}`);
-
           setLastChat(response.data.chatResponse);
         }
       } catch (error) {
@@ -49,7 +51,7 @@ const TextPad = ({ setLastChat }: Pick<LastChatProps, "setLastChat">) => {
         hideLoader();
       }
     }
-    await send();
+
     hideLoader();
   };
 
