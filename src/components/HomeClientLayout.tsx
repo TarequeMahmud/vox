@@ -12,6 +12,7 @@ interface HomeClientLayoutProps {
 
 const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(true);
+  const [lastChat, setLastChat] = useState<SingleChat | undefined>(undefined);
   return (
     <div className="flex flex-row justify-start h-full w-full  m-0 p-0">
       <div
@@ -42,7 +43,7 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
         <div className="flex flex-col justify-between w-[95%] overflow-y-hidden mt-10 ">
           <NewChatButton />
 
-          <ChatlistContainer />
+          <ChatlistContainer lastChat={lastChat} />
         </div>
       </div>
 
@@ -63,7 +64,7 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
         </div>
 
         {children}
-        <TextPad />
+        <TextPad setLastChat={setLastChat} />
       </div>
     </div>
   );

@@ -45,7 +45,15 @@ export async function POST(request: Request) {
         "INSERT INTO chats(user_id, title) VALUES($1, $2) RETURNING *",
         [id, title]
       );
-      const chatId = insertChat.rows[0].id;
+      const chatRow: ChatRow = insertChat.rows[0];
+      const chatResponse: SingleChat = {
+        date_group: "Today",
+        chat: {
+          id: chatRow.id,
+          title: chatRow.title,
+          created_at: chatRow.created_at,
+        },
+      };
 
       if (!insertChat || insertChat.rowCount === 0) {
         return NextResponse.json(
@@ -55,7 +63,7 @@ export async function POST(request: Request) {
       }
 
       return NextResponse.json(
-        { message: "Chat saved", chat_id: chatId },
+        { message: "Chat saved", chatResponse },
         { status: 201 }
       );
     } catch (dbError) {

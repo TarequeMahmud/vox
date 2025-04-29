@@ -8,7 +8,7 @@ import Spinner from "@/components/Spinner";
 import { askGeminiStream } from "@/lib/stream/askGeminiStream";
 import useLoader from "@/hooks/useLoader";
 
-const TextPad = () => {
+const TextPad = ({ setLastChat }: Pick<LastChatProps, "setLastChat">) => {
   const router = useRouter();
   const { addMessage, streamAiResponse } = useChat();
   const { loading, showLoader, hideLoader } = useLoader();
@@ -40,7 +40,9 @@ const TextPad = () => {
           firstMessage: input,
         });
         if (response.status === 201) {
-          await redirectTo(`/chat/${response.data.chat_id}`);
+          await redirectTo(`/chat/${response.data.chatResponse.chat.id}`);
+
+          setLastChat(response.data.chatResponse);
         }
       } catch (error) {
         console.error("There was an error!", error);

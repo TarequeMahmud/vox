@@ -2,7 +2,7 @@ import useLoader from "@/hooks/useLoader";
 import { useEffect, useState } from "react";
 import Spinner from "@/components/Spinner";
 
-const ChatlistContainer: React.FC = () => {
+const ChatlistContainer = ({ lastChat }: Pick<LastChatProps, "lastChat">) => {
   const [chatList, setChatList] = useState<GroupedChats[] | null>(null);
   const { loading, showLoader, hideLoader } = useLoader();
   useEffect(() => {
@@ -20,6 +20,40 @@ const ChatlistContainer: React.FC = () => {
 
     chatListFetch();
   }, []);
+
+  useEffect(() => {
+    const updateChatList = () => {
+      if (!lastChat || !chatList) return;
+      const todayGroup = chatList.find(
+        (group) => group.date_group === lastChat.date_group
+      );
+
+      if (todayGroup) {
+        todayGroup.chats = [
+          {
+            id: lastChat.chat.id,
+            title: lastChat.chat.title,
+            created_at: lastChat.chat.created_at,
+          },
+          ...todayGroup.chats,
+        ];
+        setChatList([...chatList]);
+      } else {
+        const newGroup = {
+          date_group: lastChat.date_group,
+          chats: [
+            {
+              id: lastChat.chat.id,
+              title: lastChat.chat.title,
+              created_at: lastChat.chat.created_at,
+            },
+          ],
+        };
+        setChatList([newGroup, ...chatList]);
+      }
+    };
+    updateChatList();
+  }, [lastChat]);
   return (
     <div className="flex flex-col justify-start items-center w-full h-[95%] my-3 overflow-y-scroll no-scrollbar">
       {!loading &&
