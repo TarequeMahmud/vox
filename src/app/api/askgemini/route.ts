@@ -1,17 +1,41 @@
+export const runtime = "edge";
+
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
-console.log(1);
 
 const ai = new GoogleGenAI({
-  apiKey: " AIzaSyAwO-ZyN4OAtDXlJgKS62fjsgIvUiz44VY",
+  apiKey: process.env.GEMINI_API_KEY!,
 });
+
+const primitive = [
+  {
+    role: "user",
+    parts: [
+      {
+        text: "developers note: As a ai model from google, you are being used in an app named vox. you are vox now. you are created by a developer named Tareque Mahmud. his github link is: https://github.com/TarequeMahmud , from next question user will be using you.",
+      },
+    ],
+  },
+  {
+    role: "model",
+    parts: [
+      {
+        text: "Ok Tareque, I understand. I will keep that in mind. I am yours. I am waiting to hear from user.",
+      },
+    ],
+  },
+];
 
 export async function POST(req: Request): Promise<NextResponse> {
   const { message } = await req.json();
 
-  const response = await ai.models.generateContentStream({
+  const chat = ai.chats.create({
     model: "gemini-2.0-flash",
-    contents: `${message}`,
+    history: primitive,
+  });
+
+  const response = await chat.sendMessageStream({
+    message,
   });
 
   const encoder = new TextEncoder();
@@ -27,22 +51,7 @@ export async function POST(req: Request): Promise<NextResponse> {
   return new NextResponse(stream, {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "no-cache",
     },
   });
 }
-
-/*
-
-
-const reader = stream.getReader();
-
-reader.read().then(function processText({ done, value }) {
-  if (done) {
-    console.log('Stream complete');
-    return;
-  }
-
-  console.log(value);
-  return reader.read().then(processText);
-});
-*/

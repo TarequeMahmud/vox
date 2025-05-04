@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 import "../globals.css";
-
 import { IBM_Plex_Sans } from "next/font/google";
-
-import { ChatProvider } from "@/contexts/ChatContext";
 import { redirect } from "next/navigation";
 import { verifyToken } from "@/lib/auth";
-import Home from "./page";
 import HomeClientLayout from "@/components/HomeClientLayout";
+import StoreProvider from "@/components/StoreProvider";
 
 export const metadata: Metadata = {
   title: "Vox- Home page",
@@ -33,11 +30,11 @@ export default async function RootLayout({
   }
   return (
     <html lang="en">
-      <ChatProvider>
+      <StoreProvider>
         <body className={ibm.className}>
           <HomeClientLayout>{children}</HomeClientLayout>
         </body>
-      </ChatProvider>
+      </StoreProvider>
     </html>
   );
 }

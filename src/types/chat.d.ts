@@ -1,12 +1,11 @@
 type ChatMessage = {
-  role: "user" | "ai";
+  role: "user" | "model";
   content: string;
 };
-type ChatContextType = {
+
+interface ChatState {
   messages: ChatMessage[];
-  addMessage: (message: ChatMessage) => void;
-  streamAiResponse: (updater: (prev: ChatMessage) => ChatMessage) => void;
-};
+}
 
 interface Props {
   markdown: string;
@@ -29,3 +28,17 @@ type GroupedChats = {
     created_at: string;
   }[];
 };
+
+type SingleChat = {
+  date_group: ChatRow["date_group"];
+  chat: {
+    id: string;
+    title: string;
+    created_at: string;
+  };
+};
+
+interface LastChatProps {
+  lastChat: SingleChat | undefined;
+  setLastChat: React.Dispatch<React.SetStateAction<SingleChat | undefined>>;
+}
