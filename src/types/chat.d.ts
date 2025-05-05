@@ -1,11 +1,21 @@
+type Role = "user" | "model";
 type ChatMessage = {
-  role: "user" | "model";
+  role: Role;
   content: string;
 };
 
 interface ChatState {
   messages: ChatMessage[];
 }
+
+type Part = {
+  text: string;
+};
+
+type MessageHistoryContent = {
+  role: Role;
+  parts: Part[];
+};
 
 interface Props {
   markdown: string;

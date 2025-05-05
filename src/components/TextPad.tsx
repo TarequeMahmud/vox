@@ -1,17 +1,23 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { addMessage, streamAIResponse } from "@/lib/features/chat/chatSlice";
+import {
+  addMessage,
+  selectAllMessages,
+  streamAIResponse,
+} from "@/lib/features/chat/chatSlice";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
 import { askgemini } from "@/lib/askgemini";
 import useLoader from "@/hooks/useLoader";
-import { useAppDispatch } from "@/hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
+import generateHistory from "@/lib/generateHistory";
 
 const TextPad = ({ setLastChat }: Pick<LastChatProps, "setLastChat">) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const history = useAppSelector(selectAllMessages);
   const { loading, showLoader, hideLoader } = useLoader();
 
   const [input, setInput] = useState("");
@@ -19,10 +25,11 @@ const TextPad = ({ setLastChat }: Pick<LastChatProps, "setLastChat">) => {
 
   const send = async () => {
     if (!input.trim()) return;
-
     dispatch(addMessage({ role: "user", content: input }));
     setInput("");
-    await askgemini(input, (chunk) => dispatch(streamAIResponse(chunk)));
+    await askgemini(input, generateHistory(history), (chunk) =>
+      dispatch(streamAIResponse(chunk))
+    );
   };
 
   const handleSubmit = async () => {

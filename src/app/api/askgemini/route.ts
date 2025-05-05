@@ -3,10 +3,6 @@ export const runtime = "edge";
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY!,
-});
-
 const primitive = [
   {
     role: "user",
@@ -27,11 +23,18 @@ const primitive = [
 ];
 
 export async function POST(req: Request): Promise<NextResponse> {
-  const { message } = await req.json();
+  const { message, history } = await req.json();
+
+  const ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY!,
+  });
+
+  const updatedHistory = [...primitive, ...history];
+  console.log(updatedHistory);
 
   const chat = ai.chats.create({
     model: "gemini-2.0-flash",
-    history: primitive,
+    history: updatedHistory,
   });
 
   const response = await chat.sendMessageStream({
