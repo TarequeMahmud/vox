@@ -90,3 +90,69 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function GET(request: Request) {
+  try {
+    const { pathname } = new URL(request.url);
+    const chatId = pathname.split("/")[3];
+    const uuidRegex =
+      /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
+    if (!uuidRegex.test(chatId)) {
+      return NextResponse.json(
+        { error: "Invalid chat ID format" },
+        { status: 400 }
+      );
+    }
+
+    try {
+      const getMessages = await query(
+        "SELECT * FROM messages WHERE chat_id = $1 ORDER BY sequence ASC",
+        [chatId]
+      );
+
+      if (!getMessages || getMessages.rowCount === 0) {
+        return NextResponse.json(
+          { error: "No messages found for this chat" },
+          { status: 404 }
+        );
+      }
+
+      const responseArray = getMessages.rows.map((items) => {
+        return {
+          id: items.id,
+          role: items.role,
+          content: items.content,
+        };
+      });
+
+      return NextResponse.json(responseArray, { status: 200 });
+    } catch (dbError) {
+      if (dbError instanceof DatabaseError) {
+        console.error("Database error:", dbError);
+        if (dbError.code === "ETIMEDOUT") {
+          return NextResponse.json(
+            { error: "Database connection timed out" },
+            { status: 500 }
+          );
+        }
+
+        return NextResponse.json(
+          { error: "Failed to retrieve messages from database" },
+          { status: 500 }
+        );
+      }
+    }
+  } catch (error: unknown) {
+    console.error("Unexpected server error:", error);
+
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}

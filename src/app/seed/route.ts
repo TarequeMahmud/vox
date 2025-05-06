@@ -48,7 +48,8 @@ async function seedMessages() {
   console.log("Creating messages table if it does not exist...");
   await query(`
             CREATE TABLE IF NOT EXISTS messages (
-               id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+               sequence  SERIAL PRIMARY KEY,
+               id UUID UNIQUE DEFAULT gen_random_uuid(),
                chat_id UUID REFERENCES chats(id),
                user_id UUID REFERENCES users(id),
                content TEXT NOT NULL,
@@ -66,7 +67,7 @@ export async function GET() {
   try {
     //await seedUsers();
     //await seedChats();
-    //await seedMessages();
+    // await seedMessages();
     return NextResponse.json({
       message: "Seeding Complete",
     });
