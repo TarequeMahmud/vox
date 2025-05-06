@@ -17,6 +17,11 @@ type MessageHistoryContent = {
   parts: Part[];
 };
 
+interface InsertMessagePayload<R extends Role> {
+  text: string;
+  role: R;
+}
+
 interface Props {
   markdown: string;
 }

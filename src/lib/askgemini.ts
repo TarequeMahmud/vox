@@ -1,5 +1,3 @@
-import { messageInterceptor } from "./messageInterceptor";
-
 export async function askgemini(
   message: string,
   history: MessageHistoryContent[],
@@ -25,4 +23,5 @@ export async function askgemini(
     fullResponse += chunk;
     onChunk(chunk);
   }
+  return fullResponse;
 }

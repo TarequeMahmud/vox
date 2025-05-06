@@ -6,15 +6,19 @@ import {
   selectAllMessages,
   streamAIResponse,
 } from "@/lib/features/chat/chatSlice";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
 import { askgemini } from "@/lib/askgemini";
 import useLoader from "@/hooks/useLoader";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import generateHistory from "@/lib/generateHistory";
+import { insertMessage } from "@/lib/insertMessage";
 
+//TextPad Component
 const TextPad = ({ setLastChat }: Pick<LastChatProps, "setLastChat">) => {
+  const params = useParams();
+  let chatId = typeof params.id === "string" ? params.id : "";
   const router = useRouter();
   const dispatch = useAppDispatch();
   const history = useAppSelector(selectAllMessages);
@@ -27,37 +31,43 @@ const TextPad = ({ setLastChat }: Pick<LastChatProps, "setLastChat">) => {
     if (!input.trim()) return;
     dispatch(addMessage({ role: "user", content: input }));
     setInput("");
-    await askgemini(input, generateHistory(history), (chunk) =>
+    const fullText = await askgemini(input, generateHistory(history), (chunk) =>
       dispatch(streamAIResponse(chunk))
     );
+    return fullText;
   };
 
   const handleSubmit = async () => {
     showLoader();
+    const uuid = crypto.randomUUID();
+    const isHome = window.location.pathname === "/";
 
-    if (window.location.pathname === "/") {
-      const uuid = crypto.randomUUID();
+    if (isHome) {
+      chatId = uuid;
       await redirectTo(`/chat/${uuid}`);
-      await send();
-      hideLoader();
+    }
+    const fullResponse = await send();
+    hideLoader();
 
-      try {
+    try {
+      if (isHome) {
         const response = await axios.post("/api/chats", {
           firstMessage: input,
           chatId: uuid,
         });
         if (response.status === 201) {
           setLastChat(response.data.chatResponse);
-
-          return;
         }
-      } catch (error) {
-        console.error("There was an error!", error);
-        hideLoader();
       }
+    } catch (error) {
+      console.error("There was an error!", error);
+      hideLoader();
     }
-    await send();
-    hideLoader();
+    await insertMessage(
+      { text: input, role: "user" },
+      { text: fullResponse!, role: "model" },
+      chatId
+    );
   };
 
   return (
