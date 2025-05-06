@@ -44,7 +44,7 @@ const TextPad = ({ setLastChat }: Pick<LastChatProps, "setLastChat">) => {
 
     if (isHome) {
       chatId = uuid;
-      await redirectTo(`/chat/${uuid}`);
+      await redirectTo(`/chat/${uuid}?new=true`);
     }
     const fullResponse = await send();
     hideLoader();

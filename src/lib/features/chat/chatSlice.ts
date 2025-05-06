@@ -15,6 +15,9 @@ const chatsSlice = createSlice({
 
       state.messages.push(AIResponseStarter);
     },
+    addMessageArray: (state, action) => {
+      state.messages = action.payload;
+    },
     streamAIResponse: (
       state,
       action: PayloadAction<ChatMessage["content"]>
@@ -31,7 +34,7 @@ const chatsSlice = createSlice({
 });
 
 export const selectAllMessages = (state: RootState) => state.chat.messages;
-export const { addMessage, streamAIResponse, clearMessages } =
+export const { addMessage, streamAIResponse, addMessageArray, clearMessages } =
   chatsSlice.actions;
 
 export default chatsSlice.reducer;
