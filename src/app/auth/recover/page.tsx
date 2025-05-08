@@ -105,8 +105,8 @@ export default function Recover() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-[60%] h-auto min-h-full px-10">
-      <div className="flex flex-col justify-center items-center w-[600px] h-auto px-10 bg-[#ffffffe1] rounded-xl border-2 border-gray-300 shadow-lg pb-4 my-10">
+    <div className="flex flex-col justify-center items-center w-full md:w-[60%] h-auto min-h-full md:px-10">
+      <div className="flex flex-col justify-center items-center w-[97%] md:w-[600px] h-auto px-5 md:px-10 bg-[#ffffffe1] rounded-xl border-2 border-gray-300 shadow-lg pb-4 my-10">
         <h1 className="text-3xl font-bold my-4">
           {status === "SEARCH_EMAIL" && "Enter your email"}
           {status === "VERIFY_OTP" && "Verify your email"}

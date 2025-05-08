@@ -73,8 +73,8 @@ export default function Register() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-[60%] h-auto min-h-full px-10">
-      <div className="flex flex-col justify-center items-center w-[600px] h-auto px-10 bg-[#ffffffe1] rounded-xl border-2 border-gray-300 shadow-lg pb-4 my-10">
+    <div className="flex flex-col justify-center items-center w-full md:w-[60%] h-auto min-h-full md:px-10">
+      <div className="flex flex-col justify-center items-center w-[97%] md:w-[600px] h-auto px-5 md:px-10 bg-[#ffffffe1] rounded-xl border-2 border-gray-300 shadow-lg pb-4 my-10">
         <h1 className="text-3xl font-bold my-4">
           {registered ? "Verify Account" : "Register"}
         </h1>
@@ -90,21 +90,21 @@ export default function Register() {
                 placeholder="Full Name"
                 name="name"
                 required
-                className="w-full h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
+                className="w-full md:h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
               />
               <input
                 type="text"
                 placeholder="Username"
                 name="username"
                 required
-                className="w-full h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
+                className="w-full md:h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
               />
               <input
                 type="email"
                 placeholder="Email"
                 name="email"
                 required
-                className="w-full h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
+                className="w-full md:h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
               />
               <input
                 type="password"
@@ -117,7 +117,7 @@ export default function Register() {
                 autoCorrect="off"
                 autoCapitalize="off"
                 spellCheck="false"
-                className="w-full h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
+                className="w-full md:h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
               />
               <input
                 type="tel"
@@ -125,7 +125,7 @@ export default function Register() {
                 name="phone"
                 required
                 pattern="[0-9]{11}"
-                className="w-full h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
+                className="w-full md:h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
               />
               <div className="flex items-center w-full m-2">
                 <input type="checkbox" name="terms" required className="mr-2" />
@@ -141,13 +141,13 @@ export default function Register() {
               placeholder="Enter Verification Code"
               name="verificationCode"
               required
-              className="w-full h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
+              className="w-full md:h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
             />
           )}
 
           <button
             type="submit"
-            className="w-full h-[50px] bg-[#0000ff] text-white rounded-md m-4 cursor-pointer hover:bg-[#0000ffb3] transition duration-300 ease-in-out"
+            className="w-full md:h-[50px] h-10 bg-[#0000ff] text-white rounded-md m-4 cursor-pointer hover:bg-[#0000ffb3] transition duration-300 ease-in-out"
           >
             {loading ? <Spinner /> : registered ? "Verify" : "Register"}
           </button>

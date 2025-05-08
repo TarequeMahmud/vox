@@ -40,9 +40,9 @@ export default function Login() {
       });
   };
   return (
-    <div className="flex flex-col justify-center items-center w-[50%] h-full px-10  ">
+    <div className="flex flex-col justify-center items-center w-full md:w-[50%] h-full md:px-10  ">
       {/* login container */}
-      <div className="flex flex-col justify-center items-center w-[600px] h-auto px-10 bg-[#ffffffe1] rounded-xl border-2 border-gray-300 shadow-lg pb-8 my-10">
+      <div className="flex flex-col justify-center items-center w-[97%] md:w-[600px]  h-auto px-5 md:px-10 bg-[#ffffffe1] rounded-xl border-2 border-gray-300 shadow-lg pb-8 my-10">
         <h1 className="text-3xl font-bold my-4">Login</h1>
         <form
           className="flex flex-col justify-center gap-4 items-center w-full h-full"
@@ -53,7 +53,7 @@ export default function Login() {
             placeholder="Email"
             name="email"
             required
-            className="w-full h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
+            className="w-full md:h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
           />
           <input
             type="password"
@@ -66,11 +66,11 @@ export default function Login() {
             autoCorrect="off"
             autoCapitalize="none"
             spellCheck="false"
-            className="w-full h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
+            className="w-full md:h-[50px] border-2 border-gray-300 rounded-md p-2 m-2"
           />
           <button
             type="submit"
-            className="w-full h-[50px] bg-[#0000ff] text-white rounded-md m-2 cursor-pointer hover:bg-[#0000ffb3] transition duration-300 ease-in-out"
+            className="w-full h-10 md:h-[50px] bg-[#0000ff] text-white rounded-md m-2 cursor-pointer hover:bg-[#0000ffb3] transition duration-300 ease-in-out"
           >
             {loading ? <Spinner /> : "Login"}
           </button>
