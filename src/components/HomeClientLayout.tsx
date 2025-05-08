@@ -8,12 +8,14 @@ import Logo from "@/components/Logo";
 import ChatlistContainer from "./ChatlistContainer";
 import { AlertProvider } from "@/contexts/AlertContext";
 import { AlertBar } from "@/components/AlertBar";
+import Search from "./Search";
 interface HomeClientLayoutProps {
   children: React.ReactNode;
 }
 
 const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(true);
+  const [showSearchbar, setShowSearchbar] = useState(false);
   const [lastChat, setLastChat] = useState<SingleChat | undefined>(undefined);
   return (
     <AlertProvider>
@@ -36,6 +38,7 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
               <MdSearch
                 style={{ width: "25px", height: "25px", fill: "#0000ff" }}
                 className="cursor-pointer"
+                onClick={() => setShowSearchbar(!showSearchbar)}
               />
               <PiSidebarFill
                 style={{ width: "25px", height: "25px" }}
@@ -66,6 +69,12 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
               onClick={() => setShowSidebar(!showSidebar)}
             />
           </div>
+          {showSearchbar && (
+            <Search
+              setShowSearchbar={setShowSearchbar}
+              showSearchbar={showSearchbar}
+            />
+          )}
 
           {children}
           <TextPad setLastChat={setLastChat} />

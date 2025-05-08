@@ -22,8 +22,19 @@ interface InsertMessagePayload<R extends Role> {
   role: R;
 }
 
+interface SearchResult {
+  chat_id: string;
+  chat_title: string;
+  snippet: string;
+}
+
 interface Props {
   markdown: string;
+}
+
+interface SearchProps {
+  showSearchbar: boolean;
+  setShowSearchbar: (value: boolean) => void;
 }
 
 type ChatRow = {

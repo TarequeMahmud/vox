@@ -14,6 +14,10 @@
   }
 }
 
+mark {
+  @apply bg-yellow-200 font-semibold;
+}
+
 :root {
   --background: #eefcff;
   --foreground: #171717;
