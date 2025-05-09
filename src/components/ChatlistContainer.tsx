@@ -78,10 +78,9 @@ const ChatlistContainer: React.FC<ChatlistContainerProps> = ({
               <p
                 key={chat.id}
                 onClick={() => {
+                  if (window.innerWidth < 768) setShowSidebar(!showSidebar);
+                  if (window.location.pathname === `/chat/${chat.id}`) return;
                   dispatch(clearMessages());
-                  if (window.innerWidth < 768) {
-                    setShowSidebar(!showSidebar);
-                  }
                   router.push(`/chat/${chat.id}`);
                 }}
                 className="text-left my-1 px-1 rounded-[5px] w-[95%] bg-[#F4F4F4] h-7 overflow-hidden hover:bg-[#BABABA] cursor-pointer"
