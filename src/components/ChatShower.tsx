@@ -53,10 +53,12 @@ const ChatShower = () => {
           >
             <div
               className={clsx(
-                "h-auto min-h-10   m-4 rounded-[10px] text-start py-2 px-5 text-lg",
+                "h-auto min-h-10  m-1 md:m-4 rounded-[10px] text-start py-2 px-3 md:px-5 md:text-lg text-md",
                 {
-                  "bg-[#BBF4FF] w-auto max-w-[50%]": message.role === "user",
-                  "w-[80%] max-w-[90%] leading-8": message.role === "model",
+                  "bg-[#BBF4FF] w-auto md:max-w-[50%] max-w-[90%]":
+                    message.role === "user",
+                  "md:w-[80%] md:max-w-[90%] w-[95%] leading-8":
+                    message.role === "model",
                 }
               )}
             >

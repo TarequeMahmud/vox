@@ -37,6 +37,12 @@ interface SearchProps {
   setShowSearchbar: (value: boolean) => void;
 }
 
+interface ChatlistContainerProps {
+  lastChat: SingleChat | undefined;
+  showSidebar: boolean;
+  setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 type ChatRow = {
   id: string;
   user_id: string;

@@ -71,7 +71,7 @@ const TextPad = ({ setLastChat }: Pick<LastChatProps, "setLastChat">) => {
   };
 
   return (
-    <div className="relative w-[80%] h-[130px] max-w-[800px] mb-4">
+    <div className="relative w-[80%] md:h-[130px] max-w-[800px] mb-4">
       <textarea
         className="bg-white border-3 border-[#cacaca] w-full h-full rounded-3xl resize-none p-4 pr-12"
         placeholder="Ask me anything..."
