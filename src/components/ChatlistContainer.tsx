@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/hooks/reduxHooks";
 import { clearMessages } from "@/lib/features/chat/chatSlice";
 
-const ChatlistContainer = ({ lastChat }: Pick<LastChatProps, "lastChat">) => {
+const ChatlistContainer: React.FC<ChatlistContainerProps> = ({
+  lastChat,
+  showSidebar,
+  setShowSidebar,
+}) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [chatList, setChatList] = useState<GroupedChats[] | []>([]);
@@ -75,7 +79,10 @@ const ChatlistContainer = ({ lastChat }: Pick<LastChatProps, "lastChat">) => {
                 key={chat.id}
                 onClick={() => {
                   dispatch(clearMessages());
-                  router.replace(`/chat/${chat.id}`);
+                  if (window.innerWidth < 768) {
+                    setShowSidebar(!showSidebar);
+                  }
+                  router.push(`/chat/${chat.id}`);
                 }}
                 className="text-left my-1 px-1 rounded-[5px] w-[95%] bg-[#F4F4F4] h-7 overflow-hidden hover:bg-[#BABABA] cursor-pointer"
               >
