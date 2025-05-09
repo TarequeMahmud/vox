@@ -53,7 +53,7 @@ const Search: React.FC<SearchProps> = ({ setShowSearchbar, showSearchbar }) => {
 
   return (
     <div
-      className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-white shadow-lg rounded-lg p-4 flex flex-col z-10 overflow-y-scroll"
+      className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] md:w-[600px] md:h-[400px] h-[70%] bg-white shadow-black shadow-sm rounded-lg p-4 flex flex-col z-10 overflow-y-scroll"
       ref={modalRef}
     >
       <div className="flex mb-4">

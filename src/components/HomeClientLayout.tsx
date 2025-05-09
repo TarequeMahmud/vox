@@ -49,7 +49,10 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
               <MdSearch
                 style={{ width: "25px", height: "25px", fill: "#0000ff" }}
                 className="cursor-pointer"
-                onClick={() => setShowSearchbar(!showSearchbar)}
+                onClick={() => {
+                  if (window.innerWidth < 768) setShowSidebar(!showSidebar);
+                  setShowSearchbar(!showSearchbar);
+                }}
               />
               <PiSidebarFill
                 style={{ width: "25px", height: "25px" }}
