@@ -33,10 +33,10 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
       <div className="flex flex-row justify-start h-full w-full m-0 p-0">
         <div
           className={`
-    bg-[#8becff] border-r-2 border-[#b3b3b3] transition-all duration-300 ease-in-out 
+    bg-[#8becff] border-r-2 border-[#929292] transition-all duration-300 ease-in-out 
     ${showSidebar ? "w-[50%] md:w-[20%]" : "w-0 overflow-hidden"} 
     h-full flex flex-col justify-start items-center 
-    fixed md:static top-0 left-0 z-50`}
+    fixed md:static top-0 left-0 z-50 shadow-black shadow-lg md:shadow-none `}
         >
           <div
             className={`flex flex-row justify-between items-center h-10 w-[95%] pt-2 transition-all duration-400 ease-in-out ${
