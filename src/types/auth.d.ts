@@ -5,5 +5,5 @@ declare namespace NodeJS {
 }
 
 interface AuthLinksProps {
-  mode?: "login" | "register";
+  mode?: "login" | "register" | "reset";
 }

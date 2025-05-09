@@ -170,6 +170,7 @@ export default function Recover() {
             </button>
           )}
         </form>
+        <AuthLinks mode="reset" />
       </div>
     </div>
   );
