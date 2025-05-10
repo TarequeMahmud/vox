@@ -4,6 +4,12 @@
 
 ---
 
+Login Credentials:
+Email: tarequemahmud313@gmail.com
+password:aaaaaa
+
+---
+
 ## 📌 Table of Contents
 
 - [About](#about)
@@ -45,14 +51,17 @@
 - 🧠 **Streamed Response**  
   Uses **Redux Toolkit** and **ReadableSream** api to stream the response from the model.
 
+- 📝 **Title Prediction**  
+  Automatically generates a chat title based on the first message.
+
 - 🔍 **Search Messages**  
   Enables users to search through chat history for specific keywords or phrases, leveraging PostgreSQL full-text search capabilities.
 
 - 🌐 **Dynamic Routing**  
   Chat sessions stored via clean URL slugs `/chat/[chatId]`.
 
-<!-- - 📱 **Responsive Design**
-  Mobile-first UI using **Tailwind CSS** — pixel-perfect across all devices. -->
+- 📱 **Responsive Design**
+  UI for both desktop and mobile using **Tailwind CSS** — pixel-perfect across all devices.
 
 - 📔️ **PostgreSQL**
   Backend-ready for persistent chat history using **PostgreSQL** or any SQL-based DB.
@@ -456,7 +465,7 @@ REDIS_URL="redis://<your-redis-url>"
 
 2. Ensure Redis is running locally or use a cloud provider like **Redis Cloud**.
 
-3. Test the connection by running the following script:
+3. Test the connection by looking on server console for the the following script:
 
 ```ts
 import { createClient } from "redis";
@@ -494,6 +503,12 @@ To manually deploy:
 
 ```bash
 vercel deploy
+```
+
+To monitor logs in real-time for the last hour:
+
+```bash
+vercel logs <app name>.vercel.app --since 1h --follow
 ```
 
 Or use the [Vercel Dashboard](https://vercel.com/dashboard) to connect your repo.
