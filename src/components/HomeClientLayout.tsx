@@ -9,14 +9,20 @@ import ChatlistContainer from "./ChatlistContainer";
 import { AlertProvider } from "@/contexts/AlertContext";
 import { AlertBar } from "@/components/AlertBar";
 import Search from "./Search";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/hooks/reduxHooks";
+import { clearMessages } from "@/lib/features/chat/chatSlice";
 interface HomeClientLayoutProps {
   children: React.ReactNode;
 }
 
 const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const [showSidebar, setShowSidebar] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [showSearchbar, setShowSearchbar] = useState(false);
+  const [temporary, setTemporary] = useState(false);
   const [lastChat, setLastChat] = useState<SingleChat | undefined>(undefined);
 
   useEffect(() => {
@@ -77,14 +83,37 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
             showSidebar && "md:w-[80%]"
           }`}
         >
-          <div className="h-[50px] w-full border-b-2 border-[#e8e8e8]">
-            <PiSidebarFill
-              style={{ width: "25px", height: "25px" }}
-              className={`text-[#950084] ml-2 cursor-pointer mt-4 transition-all duration-300 ease-in-out
+          <div className="flex flex-row justify-between items-center h-[50px] w-full border-b-2 border-[#e8e8e8]">
+            <div className="flex flex-row ml-2">
+              <PiSidebarFill
+                style={{ width: "25px", height: "25px" }}
+                className={`text-[#950084] mr-3 cursor-pointer transition-all duration-300 ease-in-out
     ${showSidebar ? "opacity-0 scale-0" : "opacity-100 scale-100"}
   `}
-              onClick={() => setShowSidebar(!showSidebar)}
-            />
+                onClick={() => setShowSidebar(!showSidebar)}
+              />
+              <p className="text-xl font-semibold">
+                Vox AI -- Developed By Tareque Mahmud
+              </p>
+            </div>
+            <div className="flex flex-row justify-between items-center h-10 w-40">
+              <p
+                className={`h-8 w-30  rounded-2xl border-1 border-amber-800 text-center cursor-pointer  text-lg select-none ${
+                  temporary ? "bg-amber-800 text-white" : "bg-white text-black"
+                }`}
+                onClick={() => {
+                  if (!temporary) {
+                    router.push(`/chat/${"temporary"}?new=true`);
+                  } else {
+                    router.push(`/`);
+                  }
+                  dispatch(clearMessages());
+                  setTemporary(!temporary);
+                }}
+              >
+                Temporary
+              </p>
+            </div>
           </div>
           {showSearchbar && (
             <Search

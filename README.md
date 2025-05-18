@@ -58,6 +58,9 @@
 - 📝 **Title Prediction**  
   Automatically generates a chat title based on the first message.
 
+- 🕒 **Temporary Chats**  
+  Start quick, disposable chat sessions that are not saved to your account or database. Ideal for instant, private conversations without leaving a trace.
+
 - 🔍 **Search Messages**  
   Enables users to search through chat history for specific keywords or phrases, leveraging PostgreSQL full-text search capabilities.
 

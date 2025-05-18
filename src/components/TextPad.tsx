@@ -41,33 +41,36 @@ const TextPad = ({ setLastChat }: Pick<LastChatProps, "setLastChat">) => {
     showLoader();
     const uuid = crypto.randomUUID();
     const isHome = window.location.pathname === "/";
-
-    if (isHome) {
-      chatId = uuid;
+    const temporary = window.location.pathname === "/chat/temporary";
+    const isNewChat = isHome && !temporary;
+    let chatId = uuid;
+    if (isNewChat) {
       await redirectTo(`/chat/${uuid}?new=true`);
     }
     const fullResponse = await send();
     hideLoader();
 
-    try {
-      if (isHome) {
-        const response = await axios.post("/api/chats", {
-          firstMessage: input,
-          chatId: uuid,
-        });
-        if (response.status === 201) {
-          setLastChat(response.data.chatResponse);
+    if (!temporary) {
+      try {
+        if (isHome) {
+          const response = await axios.post("/api/chats", {
+            firstMessage: input,
+            chatId: uuid,
+          });
+          if (response.status === 201) {
+            setLastChat(response.data.chatResponse);
+          }
         }
+      } catch (error) {
+        console.error("There was an error!", error);
+        hideLoader();
       }
-    } catch (error) {
-      console.error("There was an error!", error);
-      hideLoader();
+      await insertMessage(
+        { text: input, role: "user" },
+        { text: fullResponse!, role: "model" },
+        chatId
+      );
     }
-    await insertMessage(
-      { text: input, role: "user" },
-      { text: fullResponse!, role: "model" },
-      chatId
-    );
   };
 
   return (
