@@ -12,6 +12,7 @@ import Search from "./Search";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/hooks/reduxHooks";
 import { clearMessages } from "@/lib/features/chat/chatSlice";
+import Image from "next/image";
 interface HomeClientLayoutProps {
   children: React.ReactNode;
 }
@@ -23,6 +24,7 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
   const [hasMounted, setHasMounted] = useState(false);
   const [showSearchbar, setShowSearchbar] = useState(false);
   const [temporary, setTemporary] = useState(false);
+  const [showLogout, setShowLogout] = useState(false);
   const [lastChat, setLastChat] = useState<SingleChat | undefined>(undefined);
 
   useEffect(() => {
@@ -96,7 +98,7 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
                 Vox AI -- Developed By Tareque Mahmud
               </p>
             </div>
-            <div className="flex flex-row justify-between items-center h-10 w-40">
+            <div className="flex flex-row justify-between items-center h-[80%] w-[15%] mr-6">
               <p
                 className={`h-8 w-30  rounded-2xl border-1 border-amber-800 text-center cursor-pointer  text-lg select-none ${
                   temporary ? "bg-amber-800 text-white" : "bg-white text-black"
@@ -113,6 +115,33 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
               >
                 Temporary
               </p>
+
+              <div className="relative">
+                <Image
+                  src="/user.png"
+                  alt="user icon"
+                  height={30}
+                  width={30}
+                  className="my-0 ml-3 cursor-pointer"
+                  onClick={() => {
+                    setShowLogout(!showLogout);
+                  }}
+                />
+                {showLogout && (
+                  <div className="fixed top-15 right-15 w-40 bg-white border-1 rounded-md hover:bg-amber-800 hover:text-white ">
+                    <p
+                      className="text-xl text-center"
+                      onClick={async () => {
+                        setShowLogout(!showLogout);
+                        await fetch("/api/auth/logout");
+                        window.location.reload();
+                      }}
+                    >
+                      Logout
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           {showSearchbar && (
