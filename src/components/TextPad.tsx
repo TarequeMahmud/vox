@@ -43,7 +43,7 @@ const TextPad = ({ setLastChat }: Pick<LastChatProps, "setLastChat">) => {
     const isHome = window.location.pathname === "/";
     const temporary = window.location.pathname === "/chat/temporary";
     const isNewChat = isHome && !temporary;
-    let chatId = uuid;
+    chatId = uuid;
     if (isNewChat) {
       await redirectTo(`/chat/${uuid}?new=true`);
     }
