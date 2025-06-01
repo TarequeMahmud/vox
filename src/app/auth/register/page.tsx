@@ -34,6 +34,7 @@ export default function Register() {
 
       // Handle successful registration
       if (response.status === 201) {
+        hideLoader();
         setRegistered(email);
       }
     } catch (error) {
@@ -62,6 +63,7 @@ export default function Register() {
 
       // Handle successful registration
       if (response.status === 200) {
+        hideLoader();
         setRegistered("");
         window.location.href = "/auth/login";
       }
