@@ -86,7 +86,7 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
           }`}
         >
           <div className="flex flex-row justify-between items-center h-[50px] w-full border-b-2 border-[#e8e8e8]">
-            <div className="flex flex-row ml-2">
+            <div className="flex flex-row items-center ml-2">
               <PiSidebarFill
                 style={{ width: "25px", height: "25px" }}
                 className={`text-[#950084] mr-3 cursor-pointer transition-all duration-300 ease-in-out
@@ -94,13 +94,13 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
   `}
                 onClick={() => setShowSidebar(!showSidebar)}
               />
-              <p className="text-xl font-semibold">
-                Vox AI -- Developed By Tareque Mahmud
+              <p className="md:text-xl text-xs font-semibold">
+                Vox AI -- By Tareque Mahmud
               </p>
             </div>
-            <div className="flex flex-row justify-between items-center h-[80%] w-[15%] mr-6">
-              <p
-                className={`h-8 w-30  rounded-2xl border-1 border-amber-800 text-center cursor-pointer  text-lg select-none ${
+            <div className="flex flex-row justify-between items-center h-[80%] md:w-[15%] mr-6">
+              <button
+                className={`md:h-8 h-6 md:w-30 w-18  rounded-2xl border-1 border-amber-800 text-center cursor-pointer md:text-lg text-xs select-none ${
                   temporary ? "bg-amber-800 text-white" : "bg-white text-black"
                 }`}
                 onClick={() => {
@@ -114,7 +114,7 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
                 }}
               >
                 Temporary
-              </p>
+              </button>
 
               <div className="relative">
                 <Image
@@ -128,9 +128,9 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
                   }}
                 />
                 {showLogout && (
-                  <div className="fixed top-15 right-15 w-40 bg-white border-1 rounded-md hover:bg-amber-800 hover:text-white ">
+                  <div className="fixed md:top-15 top-10 right-8 md:w-40 w-20 bg-white border-1 rounded-md hover:bg-amber-800 hover:text-white ">
                     <p
-                      className="text-xl text-center"
+                      className="md:text-xl text-center"
                       onClick={async () => {
                         setShowLogout(!showLogout);
                         await fetch("/api/auth/logout");
