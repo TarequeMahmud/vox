@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MdSearch } from "react-icons/md";
 import { PiSidebarFill } from "react-icons/pi";
 import NewChatButton from "@/components/NewChatButton";
@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/hooks/reduxHooks";
 import { clearMessages } from "@/lib/features/chat/chatSlice";
 import Image from "next/image";
+import useClickOutside from "@/hooks/useClickOutside";
 interface HomeClientLayoutProps {
   children: React.ReactNode;
 }
@@ -26,6 +27,7 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
   const [temporary, setTemporary] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
   const [lastChat, setLastChat] = useState<SingleChat | undefined>(undefined);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setHasMounted(true);
@@ -34,17 +36,27 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
     }
   }, []);
 
+  useClickOutside(modalRef, () => {
+    if (window.innerWidth < 768) {
+      console.log("clicked outside");
+
+      setShowSidebar(false);
+    }
+  });
+
   if (!hasMounted) return null;
   return (
     <AlertProvider>
       <AlertBar />
       <div className="flex flex-row justify-start h-full w-full m-0 p-0">
+        {/* sidebar */}
         <div
           className={`
     bg-[#8becff] border-r-2 border-[#929292] transition-all duration-300 ease-in-out 
     ${showSidebar ? "w-[50%] md:w-[20%]" : "w-0 overflow-hidden"} 
     h-full flex flex-col justify-start items-center 
     fixed md:static top-0 left-0 z-50 shadow-black shadow-lg md:shadow-none `}
+          ref={modalRef}
         >
           <div
             className={`flex flex-row justify-between items-center h-10 w-[95%] pt-2 transition-all duration-400 ease-in-out ${
@@ -58,7 +70,9 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
                 style={{ width: "25px", height: "25px", fill: "#0000ff" }}
                 className="cursor-pointer"
                 onClick={() => {
-                  if (window.innerWidth < 768) setShowSidebar(!showSidebar);
+                  if (window.innerWidth < 768) {
+                    setShowSidebar(!showSidebar);
+                  }
                   setShowSearchbar(!showSearchbar);
                 }}
               />
@@ -80,6 +94,7 @@ const HomeClientLayout: React.FC<HomeClientLayoutProps> = ({ children }) => {
           </div>
         </div>
 
+        {/* fixed div */}
         <div
           className={`flex flex-col justify-between items-center h-full transition-all duration-300 ease-in-out w-full ${
             showSidebar && "md:w-[80%]"

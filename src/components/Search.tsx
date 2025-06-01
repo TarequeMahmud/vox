@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 
 import parse from "html-react-parser";
 import { useRouter } from "next/navigation";
@@ -7,6 +7,7 @@ import { useAppDispatch } from "@/hooks/reduxHooks";
 import { clearMessages } from "@/lib/features/chat/chatSlice";
 import useLoader from "@/hooks/useLoader";
 import Spinner from "@/components/Spinner";
+import useClickOutside from "@/hooks/useClickOutside";
 
 const Search: React.FC<SearchProps> = ({ setShowSearchbar, showSearchbar }) => {
   const dispatch = useAppDispatch();
@@ -17,21 +18,7 @@ const Search: React.FC<SearchProps> = ({ setShowSearchbar, showSearchbar }) => {
 
   const modalRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
-        setShowSearchbar(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [setShowSearchbar]);
+  useClickOutside(modalRef, () => setShowSearchbar(false));
 
   const handleSearch = async () => {
     showLoader();
