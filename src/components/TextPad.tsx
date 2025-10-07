@@ -43,7 +43,6 @@ const TextPad = ({ setLastChat }: Pick<LastChatProps, "setLastChat">) => {
     const isHome = window.location.pathname === "/";
     const temporary = window.location.pathname === "/chat/temporary";
     const isNewChat = isHome && !temporary;
-    chatId = uuid;
     if (isNewChat) {
       await redirectTo(`/chat/${uuid}?new=true`);
     }
@@ -60,11 +59,14 @@ const TextPad = ({ setLastChat }: Pick<LastChatProps, "setLastChat">) => {
           if (response.status === 201) {
             setLastChat(response.data.chatResponse);
           }
+          chatId = uuid
         }
       } catch (error) {
         console.error("There was an error!", error);
         hideLoader();
       }
+      console.log(chatId);
+
       await insertMessage(
         { text: input, role: "user" },
         { text: fullResponse!, role: "model" },
@@ -89,9 +91,8 @@ const TextPad = ({ setLastChat }: Pick<LastChatProps, "setLastChat">) => {
       ></textarea>
 
       <button
-        className={`absolute bottom-3 right-3 bg-transparent p-2 ${
-          loading ? "cursor-not-allowed" : "cursor-pointer"
-        }`}
+        className={`absolute bottom-3 right-3 bg-transparent p-2 ${loading ? "cursor-not-allowed" : "cursor-pointer"
+          }`}
         onClick={handleSubmit}
       >
         {loading ? (

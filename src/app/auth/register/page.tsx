@@ -46,13 +46,13 @@ export default function Register() {
   const handleVerification = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
+    showLoader()
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const { verificationCode } = Object.fromEntries(formData.entries());
     // Validate form inputs
     if (!verificationCode) {
       alert("Please enter the verification code.");
-      hideLoader();
       return;
     }
     try {
@@ -63,13 +63,13 @@ export default function Register() {
 
       // Handle successful registration
       if (response.status === 200) {
-        hideLoader();
         setRegistered("");
         window.location.href = "/auth/login";
       }
     } catch (error) {
       // Handle errors
       console.error("Verification failed:", error);
+    } finally {
       hideLoader();
     }
   };

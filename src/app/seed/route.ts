@@ -8,10 +8,13 @@ import { NextResponse } from "next/server";
 
 //   await query(`
 //             CREATE TABLE IF NOT EXISTS users (
-//                id UUID PRIMARY KEY,
+//                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 //                name VARCHAR(100) NOT NULL,
+//                username VARCHAR(100) UNIQUE NOT NULL,
 //                email VARCHAR(100) UNIQUE NOT NULL,
 //                password VARCHAR(255) NOT NULL,
+//                phone VARCHAR(20),
+//                validated BOOLEAN DEFAULT FALSE,
 //                created_at TIMESTAMP DEFAULT NOW()
 //             );
 //         `);
@@ -21,11 +24,11 @@ import { NextResponse } from "next/server";
 
 //   await query(
 //     `
-//             INSERT INTO users (id, name, email, password, created_at)
-//             VALUES ($1, $2, $3, $4, $5)
+//             INSERT INTO users (name, username, email, password, phone, created_at)
+//             VALUES ($1, $2, $3, $4, $5, $6)
 //             ON CONFLICT (email) DO NOTHING;
 //         `,
-//     [userId, "aaa", "aaa@aa.a", hashedPassword, new Date().toISOString()]
+//     ["aaa", "aaa", "aaa@aa.a", hashedPassword, "01918283717", new Date().toISOString()]
 //   );
 
 //   console.log("Sample user seeded.");
@@ -65,8 +68,8 @@ export async function GET() {
   console.log("Seeding tables...");
 
   try {
-    //await seedUsers();
-    //await seedChats();
+    // await seedUsers();
+    // await seedChats();
     // await seedMessages();
     return NextResponse.json({
       message: "Seeding Complete",
